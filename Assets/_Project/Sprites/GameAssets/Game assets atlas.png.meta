@@ -126,9 +126,9 @@ TextureImporter:
       name: Wheel
       rect:
         serializedVersion: 2
-        x: 335
+        x: 478
         y: 1867
-        width: 713
+        width: 427
         height: 427
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -375,7 +375,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: PowerUp1
+      name: PauseButton
       rect:
         serializedVersion: 2
         x: 2399
@@ -459,13 +459,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: PowerUp2
+      name: Coin
       rect:
         serializedVersion: 2
-        x: 2894
+        x: 2895
         y: 1430
-        width: 131
-        height: 145
+        width: 129
+        height: 144
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -668,6 +668,48 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: LeftButton
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 2022
+        width: 100
+        height: 115
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5d092312172d8f643ba2f9f1c5a6ca34
+      internalID: -1045782997
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RightButton
+      rect:
+        serializedVersion: 2
+        x: 948
+        y: 2024
+        width: 100
+        height: 115
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 27e83de1e2bb46145a2b3434c593565d
+      internalID: -1812698463
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -687,17 +729,19 @@ TextureImporter:
       BarNitroFull: -1310838293
       BarRed: 919997775
       Brake: -1529935649
+      Coin: 407477322
       Game assets atlas_1: 1846002622
       Goo: -1821939408
+      LeftButton: -1045782997
       Man1: -1377113091
       Man2: 241966492
       Oil: 1391885567
-      PowerUp1: 1170570593
-      PowerUp2: 407477322
+      PauseButton: 1170570593
       PowerUpHP: 1127013974
       PowerUpMagnet: 979789477
       PowerUpNitro: 1480487311
       PowerUpShield: -1295070173
+      RightButton: -1812698463
       RoadBlock: 2030750137
       RoadLargeCrack1: -2126792535
       RoadLargeCrack2: -2126792535
