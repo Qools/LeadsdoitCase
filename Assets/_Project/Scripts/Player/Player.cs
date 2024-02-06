@@ -7,16 +7,27 @@ using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
+    [SerializeField] private PlayerEffects _playerEffects;
+
+    [SerializeField] private SpriteRenderer _spriteRenderer;
+
     [SerializeField] private Button _leftButton;
     [SerializeField] private Button _rightButton;
     [SerializeField] private Button _brakeButton;
     [SerializeField] private Button _throttleButton;
 
+    [SerializeField] private List<Sprite> _sprites;
+    [SerializeField] private List<Sprite> _effectSprites;
+
     [SerializeField] private Collider2D _magnetCollider;
 
     [SerializeField] private float _maxSpeed;
     private float _speed;
+    [SerializeField] private float sideClampX;
     private float _direction;
+    public bool isShieldActive;
+
+    [SerializeField] private float _nitorSpeed;
 
     private int _coinAmount;
     [SerializeField] private int _coinValue;
@@ -31,6 +42,7 @@ public class Player : MonoBehaviour
     [SerializeField] private float _oilSpeedSlowDown;
     [SerializeField] private float _oilSlowDownTime;
 
+    [SerializeField] private float _powerUpsDuration;
 
     // Start is called before the first frame update
     void Start()
@@ -38,10 +50,14 @@ public class Player : MonoBehaviour
         _setControlButtons();
         _disableMagnet();
 
+        isShieldActive = false;
+
         _hp = 100;
         EventSystem.CallHpBarChange(_hp);
 
         _coinAmount = 0;
+
+        GameController.Instance.playerTransform = this.transform;
     }
 
     // Update is called once per frame
@@ -77,7 +93,12 @@ public class Player : MonoBehaviour
 
     private void _movePlayer()
     {
-        this.transform.Translate(new Vector3(_direction, 1f, 0f) * _speed * Time.deltaTime);
+        Vector3 direction = new Vector3(_direction, 1f, 0f);
+        this.transform.Translate(direction.normalized * _speed * Time.deltaTime);
+
+        Vector3 tempPos = this.transform.position;
+        tempPos.x = Mathf.Clamp(tempPos.x, -sideClampX, sideClampX);
+        this.transform.position = tempPos;
     }
 
     private void _throttleClicked()
@@ -118,11 +139,11 @@ public class Player : MonoBehaviour
             break;
 
             case PlayerPrefKeys.MAGNET:
-                _enableMagnet();
+                _enableMagnet(other.gameObject);
             break;
 
             case PlayerPrefKeys.NITRO:
-                _enableNitro();
+                _enableNitro(other.gameObject);
             break;
 
             case PlayerPrefKeys.HP:
@@ -130,7 +151,7 @@ public class Player : MonoBehaviour
             break;
 
             case PlayerPrefKeys.SHIELD:
-                _enableShield();
+                _enableShield(other.gameObject);
             break;
 
             case PlayerPrefKeys.OIL:
@@ -172,24 +193,67 @@ public class Player : MonoBehaviour
         _hpGameObject.SetActive(false);
     }
 
-    private void _enableMagnet()
+    private void _enableMagnet(GameObject _magnetGameObject)
     {
+        _playerEffects.ChangeEffectSprite(_effectSprites[0], _powerUpsDuration, false);
+        _changeCarSprite(1);
+
         _magnetCollider.enabled = true;
+
+        EventSystem.CallMagnetBarChange(0, _powerUpsDuration);
+
+        DOVirtual.DelayedCall(_powerUpsDuration, () => _disableMagnet());
+
+        _magnetGameObject.SetActive(false);
     }
 
     private void _disableMagnet()
     {
         _magnetCollider.enabled = false;
+
+        _changeCarSprite(0);
     }
 
-    private void _enableNitro()
+    private void _enableNitro(GameObject _nitroGameObject)
     {
+        _playerEffects.ChangeEffectSprite(_effectSprites[1], _powerUpsDuration, true);
+        _changeCarSprite(2);
 
+        _speed = _nitorSpeed;
+
+        EventSystem.CallNitroBarChange(0, _powerUpsDuration);
+
+        DOVirtual.DelayedCall(_powerUpsDuration, () => _disableNitro());
+
+        _nitroGameObject.SetActive(false);
     }
 
-    private void _enableShield()
+    private void _disableNitro()
     {
+        _speed = _maxSpeed;
 
+        _changeCarSprite(0);
+    }
+
+    private void _enableShield(GameObject _shieldGameObject)
+    {
+        _playerEffects.ChangeEffectSprite(_effectSprites[2], _powerUpsDuration, false);
+        _changeCarSprite(3);
+
+        isShieldActive = true;
+
+        EventSystem.CallShieldBarChange(0, _powerUpsDuration);
+
+        DOVirtual.DelayedCall(_powerUpsDuration, () => _disableShield());
+
+        _shieldGameObject.SetActive(false);
+    }
+
+    private void _disableShield()
+    {
+        isShieldActive = false;
+
+        _changeCarSprite(0);
     }
 
     private void _hitBarrier()
@@ -235,5 +299,10 @@ public class Player : MonoBehaviour
         _speed = _oilSpeedSlowDown;
 
         DOVirtual.DelayedCall(_oilSlowDownTime, ()=> _speed = _maxSpeed);
+    }
+
+    private void _changeCarSprite(int _id)
+    {
+        _spriteRenderer.sprite = _sprites[_id];
     }
 }

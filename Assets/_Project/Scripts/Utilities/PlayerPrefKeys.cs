@@ -5,6 +5,9 @@ using UnityEngine;
 public class PlayerPrefKeys
 {
     public const string PLAYER = "Player";
+    public const string MAGNET_COLLIDER = "MagnetCollider";
+    public const string HIGHSCORE = "HighScore";
+    public const string SCORE = "Score";
 
     public const string COIN = "Coin";
     public const string NITRO = "Nitro";

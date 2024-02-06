@@ -34,7 +34,12 @@ public class GameUIController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (!GameManager.Instance.isGameStarted)
+        {
+            return;
+        }
+
+        _setScoreText();
     }
 
     private void OnEnable()
@@ -43,6 +48,9 @@ public class GameUIController : MonoBehaviour
         EventSystem.OnGameOver += _enableGameOverPanel;
 
         EventSystem.OnHpBarChange += _onHpBarChange;
+        EventSystem.OnMagnetBarChange += _onMagnetBarChange;
+        EventSystem.OnNitroBarChange += _onNitroBarChange;
+        EventSystem.OnShieldBarChange += _onShieldBarChange;
     }
 
     private void OnDisable()
@@ -51,6 +59,9 @@ public class GameUIController : MonoBehaviour
         EventSystem.OnGameOver -= _enableGameOverPanel;
 
         EventSystem.OnHpBarChange -= _onHpBarChange;
+        EventSystem.OnMagnetBarChange -= _onMagnetBarChange;
+        EventSystem.OnNitroBarChange -= _onNitroBarChange;
+        EventSystem.OnShieldBarChange -= _onShieldBarChange;
     }
 
     private void _disableBars()
@@ -102,5 +113,51 @@ public class GameUIController : MonoBehaviour
     private void _onHpBarChange(int _hpValue)
     {
         _hpBar.DOValue(_hpValue, 1f);
+    }
+
+    private void _onMagnetBarChange(int _magnetValue, float _duration)
+    {
+        _enableBar(_magnetBar, true);
+
+        _magnetBar.value = _magnetBar.maxValue;
+
+        _magnetBar.DOValue(_magnetValue, _duration).OnComplete(()=>
+        {
+            _enableBar(_magnetBar, false);
+        });
+    }
+
+    private void _onNitroBarChange(int _nitroValue, float _duration)
+    {
+        _enableBar(_nitroBar, true);
+
+        _nitroBar.value = _nitroBar.maxValue;
+
+        _nitroBar.DOValue(_nitroValue, _duration).OnComplete(() =>
+        {
+            _enableBar(_nitroBar, false);
+        });
+    }
+
+    private void _onShieldBarChange(int _shieldValue, float _duration)
+    {
+        _enableBar(_shieldBar, true);
+
+        _shieldBar.value = _shieldBar.maxValue;
+
+        _shieldBar.DOValue(_shieldValue, _duration).OnComplete(() =>
+        {
+            _enableBar(_shieldBar, false);
+        });
+    }
+
+    private void _enableBar(Slider _bar, bool isEnabled)
+    {
+        _bar.gameObject.SetActive(isEnabled);
+    }
+
+    private void _setScoreText()
+    {
+        _scoreText.text = PlayerPrefKeys.SCORE + " " + GameController.Instance.GetScore().ToString();
     }
 }
