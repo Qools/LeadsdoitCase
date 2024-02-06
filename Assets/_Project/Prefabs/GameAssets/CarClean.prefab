@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 8592293196019109422}
   m_Layer: 0
   m_Name: CarClean
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -119,4 +119,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30e9b59cad46d1849a709dc98be8f116, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 5
+  _leftButton: {fileID: 0}
+  _rightButton: {fileID: 0}
+  _brakeButton: {fileID: 0}
+  _throttleButton: {fileID: 0}
+  _maxSpeed: 0

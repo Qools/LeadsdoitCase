@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7163541828046943303}
   m_Layer: 0
   m_Name: RoadLargeCrack2
-  m_TagString: Untagged
+  m_TagString: Crack
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

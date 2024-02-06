@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71c1514a6bd24e1e882cebbe1904ce04, type: 3}
   m_Name: SF-Compact-Text-Semibold SDF
   m_EditorClassIdentifier: 
-  hashCode: 0
+  hashCode: 1394569988
   material: {fileID: 3233890913103332664}
-  materialHashCode: 0
+  materialHashCode: -550621404
   m_Version: 1.1.0
   m_SourceFontFileGUID: 85d62070bdb76cb45b8e1cc7aa6b4c42
   m_SourceFontFile_EditorRef: {fileID: 12800000, guid: 85d62070bdb76cb45b8e1cc7aa6b4c42, type: 3}
@@ -2800,9 +2800,9 @@ Material:
     - _OutlineWidth: 0
     - _PerspectiveFilter: 0.875
     - _Reflectivity: 10
-    - _ScaleRatioA: 1
-    - _ScaleRatioB: 1
-    - _ScaleRatioC: 1
+    - _ScaleRatioA: 0.8333333
+    - _ScaleRatioB: 0.6770833
+    - _ScaleRatioC: 0.6770833
     - _ScaleX: 1
     - _ScaleY: 1
     - _ShaderFlags: 0
