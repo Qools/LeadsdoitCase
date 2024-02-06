@@ -1,10 +1,11 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GameUIController : Singleton<GameUIController>
+public class GameUIController : MonoBehaviour
 {
     [SerializeField] private CanvasGroup _uiCanvasGroup;
 
@@ -40,12 +41,16 @@ public class GameUIController : Singleton<GameUIController>
     {
         EventSystem.OnStartGame += _enableGameUI;
         EventSystem.OnGameOver += _enableGameOverPanel;
+
+        EventSystem.OnHpBarChange += _onHpBarChange;
     }
 
     private void OnDisable()
     {
         EventSystem.OnStartGame -= _enableGameUI;
         EventSystem.OnGameOver -= _enableGameOverPanel;
+
+        EventSystem.OnHpBarChange -= _onHpBarChange;
     }
 
     private void _disableBars()
@@ -92,5 +97,10 @@ public class GameUIController : Singleton<GameUIController>
     private void _enableGameOverPanel(GameResult gameResult)
     {
         _gameOverPanel.gameObject.SetActive(true);
+    }
+
+    private void _onHpBarChange(int _hpValue)
+    {
+        _hpBar.DOValue(_hpValue, 1f);
     }
 }

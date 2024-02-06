@@ -10,4 +10,7 @@ public static class EventSystem
 
     public static Action OnNewLevelLoad;
     public static void CallNewLevelLoad() => OnNewLevelLoad?.Invoke();
+
+    public static Action<int> OnHpBarChange;
+    public static void CallHpBarChange(int hpValue) => OnHpBarChange?.Invoke(hpValue);
 }

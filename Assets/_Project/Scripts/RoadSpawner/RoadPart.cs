@@ -19,6 +19,6 @@ public class RoadPart : MonoBehaviour
 
     private void _destroyRoadPart()
     {
-        Destroy(this.gameObject);
+        //Destroy(this.gameObject);
     }
 }

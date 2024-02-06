@@ -60,9 +60,15 @@ public class GameManager : Singleton<GameManager>
     {
         isGameStarted = false;
 
-        if (gameResult == global::GameResult.Win)
+        switch (gameResult)
         {
-            Win();
+            case global::GameResult.Win:
+                Win();
+            break;
+
+            case global::GameResult.Lose:
+                GameOver();
+            break;
         }
     }
 
@@ -88,5 +94,10 @@ public class GameManager : Singleton<GameManager>
     public void Win()
     {
         DataManager.Instance.SetLevel(DataManager.Instance.GetLevel() + 1);
+    }
+
+    public void GameOver()
+    {
+        
     }
 }

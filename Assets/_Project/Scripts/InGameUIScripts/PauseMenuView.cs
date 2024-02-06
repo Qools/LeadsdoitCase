@@ -17,7 +17,6 @@ public class PauseMenuView : MonoBehaviour
 
     private void _setButtons()
     {
-        _closePauseMenuButton.onClick.AddListener(delegate { GameUIController.Instance.ClosePauseMenu(); });
         _restartButton.onClick.AddListener(delegate { GameManager.Instance.LoadLevel(DataManager.Instance.GetLevel()); });
         _exitButton.onClick.AddListener(delegate { Application.Quit(); });
     }

@@ -2139,7 +2139,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1623843347092807223}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5082980188687893041}
+        m_TargetAssemblyTypeName: GameUIController, Assembly-CSharp
+        m_MethodName: ClosePauseMenu
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &3132673503754583378
 GameObject:
   m_ObjectHideFlags: 0
@@ -3830,9 +3842,9 @@ MonoBehaviour:
   m_HandleRect: {fileID: 0}
   m_Direction: 1
   m_MinValue: 0
-  m_MaxValue: 1
+  m_MaxValue: 100
   m_WholeNumbers: 0
-  m_Value: 1
+  m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -4909,7 +4921,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 636d8468d7494154dacd39a2faaf58f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  status: 0
   _uiCanvasGroup: {fileID: 4911322412480515755}
   _pauseButton: {fileID: 8496340408821439339}
   _hpBar: {fileID: 2399495508624943599}
@@ -4918,7 +4929,7 @@ MonoBehaviour:
   _shieldBar: {fileID: 4601728260339039653}
   _pauseMenuPanel: {fileID: 4738578931785242939}
   _gameOverPanel: {fileID: 920611237286823813}
-  _scoreText: {fileID: 0}
+  _scoreText: {fileID: 1970687277722941080}
 --- !u!1 &8800023172695978883
 GameObject:
   m_ObjectHideFlags: 0
