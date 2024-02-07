@@ -5,11 +5,30 @@ using UnityEngine;
 
 public class CoinPowerUp : MonoBehaviour
 {
-    private void OnTriggerEnter2D(Collider2D collision)
+    Transform _playerTransform;
+    private bool _isMagnetActivated = false;
+
+
+    public void ActivateMagnetMove()
     {
-        if (collision.CompareTag(PlayerPrefKeys.MAGNET_COLLIDER))
+        _playerTransform = GameController.Instance.playerTransform;
+
+        _isMagnetActivated = true;
+    }
+
+    private void Update()
+    {
+        if (!_isMagnetActivated)
         {
-            this.transform.DOMove(collision.transform.position, 1f);
+            return;
         }
+
+        _moveToPlayer();
+    }
+
+    private void _moveToPlayer()
+    {
+        Vector3 distance = _playerTransform.position - this.transform.position;
+        this.transform.Translate(distance.normalized * 15f * Time.deltaTime);
     }
 }

@@ -7,8 +7,6 @@ using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField] private PlayerEffects _playerEffects;
-
     [SerializeField] private SpriteRenderer _spriteRenderer;
 
     [SerializeField] private Button _leftButton;
@@ -17,15 +15,16 @@ public class Player : MonoBehaviour
     [SerializeField] private Button _throttleButton;
 
     [SerializeField] private List<Sprite> _sprites;
-    [SerializeField] private List<Sprite> _effectSprites;
 
-    [SerializeField] private Collider2D _magnetCollider;
 
     [SerializeField] private float _maxSpeed;
     private float _speed;
     [SerializeField] private float sideClampX;
     private float _direction;
     public bool isShieldActive;
+    [SerializeField] private bool _isMagnetActive;
+
+    [SerializeField] private float _magnetRadius = 7f;
 
     [SerializeField] private float _nitorSpeed;
 
@@ -51,6 +50,7 @@ public class Player : MonoBehaviour
         _disableMagnet();
 
         isShieldActive = false;
+        _isMagnetActive = false;
 
         _hp = 100;
         EventSystem.CallHpBarChange(_hp);
@@ -89,6 +89,21 @@ public class Player : MonoBehaviour
         }
 #endif
         _movePlayer();
+
+        if (_isMagnetActive)
+        {
+            _coinMagnet();
+        }
+    }
+
+    private void OnEnable()
+    {
+        EventSystem.OnGameOver += _onGameOver;
+    }
+
+    private void OnDisable()
+    {
+        EventSystem.OnGameOver -= _onGameOver;
     }
 
     private void _movePlayer()
@@ -158,10 +173,6 @@ public class Player : MonoBehaviour
                 _hitOil();
             break;
 
-            case PlayerPrefKeys.BARRIER:
-                _hitBarrier();
-            break;
-
             case PlayerPrefKeys.CRACK:
                 _hitCrack();
             break;
@@ -195,10 +206,9 @@ public class Player : MonoBehaviour
 
     private void _enableMagnet(GameObject _magnetGameObject)
     {
-        _playerEffects.ChangeEffectSprite(_effectSprites[0], _powerUpsDuration, false);
         _changeCarSprite(1);
 
-        _magnetCollider.enabled = true;
+        _isMagnetActive = true;
 
         EventSystem.CallMagnetBarChange(0, _powerUpsDuration);
 
@@ -209,14 +219,13 @@ public class Player : MonoBehaviour
 
     private void _disableMagnet()
     {
-        _magnetCollider.enabled = false;
+        _isMagnetActive = false;
 
         _changeCarSprite(0);
     }
 
     private void _enableNitro(GameObject _nitroGameObject)
     {
-        _playerEffects.ChangeEffectSprite(_effectSprites[1], _powerUpsDuration, true);
         _changeCarSprite(2);
 
         _speed = _nitorSpeed;
@@ -237,7 +246,6 @@ public class Player : MonoBehaviour
 
     private void _enableShield(GameObject _shieldGameObject)
     {
-        _playerEffects.ChangeEffectSprite(_effectSprites[2], _powerUpsDuration, false);
         _changeCarSprite(3);
 
         isShieldActive = true;
@@ -256,15 +264,13 @@ public class Player : MonoBehaviour
         _changeCarSprite(0);
     }
 
-    private void _hitBarrier()
-    {
-        EventSystem.CallGameOver(GameResult.Lose);
-
-        _speed = 0f;
-    }
-
     private void _hitOil()
     {
+        if (isShieldActive)
+        {
+            return;
+        }
+
         _changeHP(-_crackDamage);
 
         _speedSlowDown();
@@ -272,6 +278,11 @@ public class Player : MonoBehaviour
 
     private void _hitCrack()
     {
+        if (isShieldActive)
+        {
+            return;
+        }
+
         _changeHP(-_crackDamage);
     }
 
@@ -289,8 +300,6 @@ public class Player : MonoBehaviour
         if (_hp <= 0)
         {
             EventSystem.CallGameOver(GameResult.Lose);
-
-            _speed = 0f;
         }
     }
 
@@ -304,5 +313,23 @@ public class Player : MonoBehaviour
     private void _changeCarSprite(int _id)
     {
         _spriteRenderer.sprite = _sprites[_id];
+    }
+
+    private void _onGameOver(GameResult gameResult)
+    {
+        _speed = 0f;
+    }
+
+    private void _coinMagnet()
+    {
+        var hitColliders = Physics2D.OverlapCircleAll(this.transform.position, _magnetRadius);
+
+        foreach (var item in hitColliders)
+        {
+            if (item.TryGetComponent(out CoinPowerUp coin))
+            {
+                coin.ActivateMagnetMove();
+            }
+        }
     }
 }

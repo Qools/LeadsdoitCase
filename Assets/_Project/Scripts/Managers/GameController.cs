@@ -8,7 +8,14 @@ public class GameController : Singleton<GameController>
 {
     public Transform playerTransform;
 
+    [SerializeField] private List<GameObject> _policeCarPrefabs;
+
     private float _score;
+
+    private bool _isPoliceSpawned;    
+    private float _timer;
+    [SerializeField] private float _spawnDistanceToPlayer;
+    [SerializeField] private float _policeSpawnTime;
         
     public void Init()
     { 
@@ -18,6 +25,9 @@ public class GameController : Singleton<GameController>
     private void Start()
     {
         _score = 0f;
+        _timer = 0f;
+
+        _isPoliceSpawned = false;
     }
 
     private void Update()
@@ -27,9 +37,19 @@ public class GameController : Singleton<GameController>
             return;
         }
 
+        if (!_isPoliceSpawned)
+        {
+            _timer += Time.deltaTime;
+        }
+
+        if (_timer >= _policeSpawnTime) 
+        {
+            _spawnPolice();
+        }
+
         if (playerTransform != null)
         {
-            _score += playerTransform.localPosition.y * Time.deltaTime;
+            _score = playerTransform.position.y /** Time.deltaTime*/;
         }
     }
 
@@ -52,6 +72,7 @@ public class GameController : Singleton<GameController>
     {
         DOTween.KillAll();
 
+        _isPoliceSpawned = false;
         _score = 0f;
     }
 
@@ -88,5 +109,24 @@ public class GameController : Singleton<GameController>
     private void _setHighScore(float highScore)
     {
         PlayerPrefs.SetInt(PlayerPrefKeys.HIGHSCORE, Mathf.RoundToInt(highScore));
+    }
+
+    private void _spawnPolice()
+    {
+        _isPoliceSpawned = true;
+        _timer = 0f;
+
+        int random = Random.Range(0, _policeCarPrefabs.Count);
+
+        GameObject _spawnedPoliceCar = Instantiate(
+            _policeCarPrefabs[random], 
+            playerTransform.position - new Vector3(0f, _spawnDistanceToPlayer, 0f),
+            Quaternion.identity,
+            GameManager.Instance.currentLevel.transform);
+
+        if (_spawnedPoliceCar.TryGetComponent(out PoliceCar _policeCar))
+        {
+            _policeCar.SetPlayer(playerTransform);
+        }
     }
 }
