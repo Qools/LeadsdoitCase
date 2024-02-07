@@ -4977,6 +4977,7 @@ MonoBehaviour:
   _shieldBar: {fileID: 4601728260339039653}
   _pauseMenuPanel: {fileID: 4738578931785242939}
   _gameOverPanel: {fileID: 920611237286823813}
+  _background: {fileID: 0}
   _scoreText: {fileID: 1970687277722941080}
 --- !u!1 &8800023172695978883
 GameObject:

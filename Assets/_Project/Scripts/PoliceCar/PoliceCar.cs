@@ -7,6 +7,9 @@ public class PoliceCar : MonoBehaviour
 {
     [SerializeField] private GameObject _lightningEffect;
 
+    [SerializeField] private SpriteRenderer _effect;
+    [SerializeField] private List<Sprite> _glows;
+
     [SerializeField] private float _maxSpeed;
     [SerializeField] private float _minSpeed;
 
@@ -17,6 +20,8 @@ public class PoliceCar : MonoBehaviour
     private void Start()
     {
         _isPlayerHit = false;
+
+        _changeEffect();
     }
 
     private void Update()
@@ -51,10 +56,15 @@ public class PoliceCar : MonoBehaviour
     {
         if (collision.gameObject.CompareTag(PlayerPrefKeys.PLAYER))
         {
-            _minSpeed = 0f;
-            _maxSpeed = 0f;
+            if (collision.TryGetComponent(out Player _player))
+            {
+                if (_player.GetShildStatus())
+                {
+                    return;
+                }
+            }
 
-            _isPlayerHit = true;
+            StopPolice();
 
             EventSystem.CallGameOver(GameResult.Lose);
 
@@ -62,4 +72,18 @@ public class PoliceCar : MonoBehaviour
         }
     }
 
+    public void StopPolice()
+    {
+        _minSpeed = 0f;
+        _maxSpeed = 0f;
+
+        _isPlayerHit = true;
+    }
+
+    private void _changeEffect()
+    {
+        _effect.sprite = _glows[Random.Range(0, _glows.Count)];
+
+        DOVirtual.DelayedCall(0.5f, () => _changeEffect());
+    }
 }

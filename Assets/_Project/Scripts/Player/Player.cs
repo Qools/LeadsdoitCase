@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class Player : MonoBehaviour
 {
     [SerializeField] private SpriteRenderer _spriteRenderer;
+    [SerializeField] private SpriteRenderer _effectRenderer;
 
     [SerializeField] private Button _leftButton;
     [SerializeField] private Button _rightButton;
@@ -15,7 +16,7 @@ public class Player : MonoBehaviour
     [SerializeField] private Button _throttleButton;
 
     [SerializeField] private List<Sprite> _sprites;
-
+    [SerializeField] private List<Sprite> _effects;
 
     [SerializeField] private float _maxSpeed;
     private float _speed;
@@ -145,6 +146,16 @@ public class Player : MonoBehaviour
         return this.transform.position; 
     }
 
+    public float GetSpeed()
+    {
+        return _speed;
+    }
+
+    public bool GetShildStatus()
+    {
+        return isShieldActive;
+    }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         switch (other.tag)
@@ -207,6 +218,7 @@ public class Player : MonoBehaviour
     private void _enableMagnet(GameObject _magnetGameObject)
     {
         _changeCarSprite(1);
+        _changeEffectSprite(1);
 
         _isMagnetActive = true;
 
@@ -222,11 +234,13 @@ public class Player : MonoBehaviour
         _isMagnetActive = false;
 
         _changeCarSprite(0);
+        _changeEffectSprite(0);
     }
 
     private void _enableNitro(GameObject _nitroGameObject)
     {
         _changeCarSprite(2);
+        _changeEffectSprite(2);
 
         _speed = _nitorSpeed;
 
@@ -242,11 +256,13 @@ public class Player : MonoBehaviour
         _speed = _maxSpeed;
 
         _changeCarSprite(0);
+        _changeEffectSprite(0);
     }
 
     private void _enableShield(GameObject _shieldGameObject)
     {
         _changeCarSprite(3);
+        _changeEffectSprite(3);
 
         isShieldActive = true;
 
@@ -261,6 +277,7 @@ public class Player : MonoBehaviour
     {
         isShieldActive = false;
 
+        _changeEffectSprite(0);
         _changeCarSprite(0);
     }
 
@@ -313,6 +330,34 @@ public class Player : MonoBehaviour
     private void _changeCarSprite(int _id)
     {
         _spriteRenderer.sprite = _sprites[_id];
+    }
+
+    private void _changeEffectSprite(int _id)
+    {
+        switch (_id)
+        {
+            case 0:
+                _effectRenderer.sprite = null;
+                _changeEffectPosition(Vector3.zero);
+            break;
+
+            case 1:
+            case 3:
+                _effectRenderer.sprite = _effects[_id];
+                _changeEffectPosition(Vector3.zero);
+            break;
+
+            case 2:
+                _effectRenderer.sprite = _effects[_id];
+                _changeEffectPosition(new Vector3(0f, -3f));
+            break;
+
+        }
+    }
+
+    private void _changeEffectPosition(Vector3 _position)
+    {
+        _effectRenderer.transform.localPosition = _position;
     }
 
     private void _onGameOver(GameResult gameResult)

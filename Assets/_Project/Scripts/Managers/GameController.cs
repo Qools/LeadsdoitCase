@@ -12,10 +12,13 @@ public class GameController : Singleton<GameController>
 
     private float _score;
 
+    private GameObject _spawnedPolice;
     private bool _isPoliceSpawned;    
-    private float _timer;
+    private float _spawnTimer;
+    private float _despawnTimer;
     [SerializeField] private float _spawnDistanceToPlayer;
     [SerializeField] private float _policeSpawnTime;
+    [SerializeField] private float _policeDespawnTime;
         
     public void Init()
     { 
@@ -25,7 +28,8 @@ public class GameController : Singleton<GameController>
     private void Start()
     {
         _score = 0f;
-        _timer = 0f;
+        _spawnTimer = 0f;
+        _despawnTimer = 0f;
 
         _isPoliceSpawned = false;
     }
@@ -39,17 +43,32 @@ public class GameController : Singleton<GameController>
 
         if (!_isPoliceSpawned)
         {
-            _timer += Time.deltaTime;
+            _spawnTimer += Time.deltaTime;
         }
 
-        if (_timer >= _policeSpawnTime) 
+        else
+        {
+            _despawnTimer += Time.deltaTime;
+        }
+
+        if (_spawnTimer >= _policeSpawnTime) 
         {
             _spawnPolice();
         }
 
+        if (_despawnTimer >= _policeDespawnTime)
+        {
+            if (!_isPoliceSpawned)
+            {
+                return;
+            }
+
+            _despawnPolice();
+        }
+
         if (playerTransform != null)
         {
-            _score = playerTransform.position.y /** Time.deltaTime*/;
+            _score = playerTransform.position.y;
         }
     }
 
@@ -73,7 +92,10 @@ public class GameController : Singleton<GameController>
         DOTween.KillAll();
 
         _isPoliceSpawned = false;
+
         _score = 0f;
+        _despawnTimer = 0f;
+        _spawnTimer = 0f;
     }
 
     private void _onGameOver(GameResult gameResult)
@@ -114,7 +136,8 @@ public class GameController : Singleton<GameController>
     private void _spawnPolice()
     {
         _isPoliceSpawned = true;
-        _timer = 0f;
+        _spawnTimer = 0f;
+        _despawnTimer = 0f;
 
         int random = Random.Range(0, _policeCarPrefabs.Count);
 
@@ -124,9 +147,29 @@ public class GameController : Singleton<GameController>
             Quaternion.identity,
             GameManager.Instance.currentLevel.transform);
 
+        _spawnedPolice = _spawnedPoliceCar;
+
         if (_spawnedPoliceCar.TryGetComponent(out PoliceCar _policeCar))
         {
             _policeCar.SetPlayer(playerTransform);
         }
+    }
+
+    private void _despawnPolice()
+    {
+        _isPoliceSpawned = false;
+
+        _despawnTimer = 0f;
+
+        if (_spawnedPolice.TryGetComponent(out PoliceCar policeCar))
+        {
+            policeCar.StopPolice();
+        }
+
+        DOVirtual.DelayedCall(3f, () =>
+        {
+            Destroy(_spawnedPolice);
+            _isPoliceSpawned = false;
+        });
     }
 }
